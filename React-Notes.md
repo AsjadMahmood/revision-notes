@@ -176,12 +176,12 @@ state. Components need to “remember” things (ex: the current input value, th
 **Step 2:** React 'Renders' your components
 “Rendering” is React calling your components.
 
-1. On initial render, React will call the root component. ```root.render(<Image />); //in index.js```
+1. On initial render, React will call the root component. ```root.render(<Image />); //in index.js``` (Image is a component)
 2. For subsequent renders, React will call the function component whose **state update** triggered the render.
 
 - This process is recursive: if the updated component returns some other component, React will render that component next, and if that component also returns something, it will render that component next, and so on. The process will continue until there are no more nested components and React knows exactly what should be displayed on screen.
 
-- During the initial render: React will create the DOM nodes for <section>, <h1>, and three <img> tags.
+- During the initial render: React will create the DOM nodes for ```<section>, <h1>, and three <img> tags``` (example)
 - During a re-render: React will calculate which of their properties, if any, have changed since the previous render. It won’t do anything with that information until the next step, the commit phase.
 
 - Rendering must always be a pure calculation. (react is doing rendering btw)
@@ -201,7 +201,44 @@ After rendering (calling) your components, React will modify the DOM.
 
 ## 4. State: As a Snapshot
 
+***“Rendering”*** means that React is calling your component, which is a function. The JSX you return from that function is like a ***snapshot*** of the UI in time. Its props, event handlers, and local variables were all calculated using its state at the time of the render.
 
+When React re-renders (when a state is changed) a component:
+
+1. React calls your function again.
+2. Your function returns a new JSX snapshot. (react calculates if there are changes)
+3. React then updates the screen to match the snapshot you’ve returned.
+
+As a component’s memory, state is not like a regular variable that disappears after your function returns. State actually “lives” in React itself—as if on a shelf!—outside of your function. When React calls your component, it gives you a snapshot of the state for that particular render. Your component returns a snapshot of the UI with a fresh set of props and event handlers in its JSX, all calculated using the state values from that render!
+
+1. You tell React to update the state
+
+2. React updates the state value
+
+3. React passes a snapshot of the state value (meaning original state is in react) into the component
+
+- **Question:** What's the output of this ? 
+```
+setNumber(0 + 5);
+setTimeout(() => {
+  alert(0);
+}, 3000);
+
+```
+output = 0;
+The state stored in React may have changed by the time the alert runs, but it was scheduled using a snapshot of the state at the time the user interacted with it!
+
+- **A state variable’s value never changes within a render** (because you have a old snapshot), even if its event handler’s code is asynchronous. Inside that render’s onClick, the value of number continues to be 0 even after setNumber(number + 5) was called. Its value was **fixed** when React **took the snapshot** of the UI by calling your component.
+
+- **React keeps the state values “fixed” within one render’s event handlers.** You don’t need to worry whether the state has changed while the code is running.
+- If you need a updated state before the next render use the state **updater function** ```setNumber(number=> number+3)```
+
+- When you call useState, React gives you a snapshot of the state for that render.
+- Variables and event handlers don’t “survive” re-renders (they have previous state value, given to them in snaphsot). Every render has its own event handlers.
+- Every render (and functions inside it) will always “see” the snapshot of the state that React gave to that render.
+- Event handlers created in the past (before render, like in case of setTimeOut of 5 sec) have the state values from the render in which they were created.
+
+https://beta.reactjs.org/learn/state-as-a-snapshot (quickly do the challenge at the last)
 
 ### Handling Evenets
 
