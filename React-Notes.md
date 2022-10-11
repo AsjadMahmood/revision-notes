@@ -1,6 +1,6 @@
 ### `React Important Concepts to Remember`
 
-### `Rendering Elements`
+### Rendering Elements
 
 - React has a ReactDOM (shadow DOM) which converts JSX element (which are infact JS objects) into real DOM elements. 
 
@@ -8,7 +8,7 @@
 
 - Becuase of Immutabe behaviour React DOM compares the element and its children to the previous one, and only applies the DOM updates necessary to bring the DOM to the desired state.
 
-### `Components and Props`
+### Components and Props
 
 - React function/class components should be pure functions i.e. they should not change the input(props)
 
@@ -38,94 +38,17 @@ Sometimes you might need multiple “holes” in a component. In that case send 
 
 Actually there are no limitations on what you can pass as props in React. Remember that components may accept arbitrary props, including primitive values, React elements, or functions.
 
-### `State: A Component's Memory`(new-docs)
+### State
 
 - Never update state directly because through setState()/useState call, React knows the state has changed, and calls the render() method again. Moreover State Updates are Merged (not in FC) so, through setState  we can independently update single state variable.
 
 - React States and Props updates may be Asynchronous so, don't rely on their prev values to update new state. Use updater func in arg instead of an object example:  
 
 ```
-setCounter((prevState, props) => ({
-  counter: prevState.counter + props.increment
-}));
 this.setState((prevState, props) => ({
   counter: prevState.counter + props.increment
 }));
 ```
-
-### `Handling Evenets`
-
-- Need to call ``` e.preventDefault(); ``` to prevent default behaviour of the dom elements (like onSubmit method of <form>). Here e is synthetic event
-
-- In JavaScript, class methods are not bound by default. So need to bind class methods in constructor or can use class feilds 
-See below example respectively.
-
-```
-this.toggleSwitch = this.toggleSwitch.bind(this) (bind method)
-```
-
-```
-incrementCounter = ()=>{} (class field method)
-```
-
-- Passing arguments to the event handlers can be done in two ways. See below example respectively.
-
-*Note : Both these appraoches create different (new) function each time it's render. But there's no way around this when passing argument.*
-
-```
-onClick={(e) => this.deleteRow(id, e)} (Problem with this syntax: A different callback is created each time the Button renders )
-```
-
-```
-onClick={this.deleteRow.bind(this, id)} (Problem with this syntax: The bind also creates new function )
-```
-
-### `Conditional Rendering`
-
-- We can shorter the conditional rendering syntax by replacing 'if' with JS Logical && Operator or using Inline If-Else with Conditional Operator. See below example respectively.
-
-```
-{ unreadMessages.length > 0 && 
-  <div> You Have {unreadMessages.length} Messages </div> 
-} 
-(If the expression does not return true/false, the above approach will return the false expression example:
- {count && <h1>Messages: {count}</h1>} in case of false will return <div> 0 </div>
-```
-
-``` 
-The user is <b>{isLoggedIn ? 'currently' : 'not'}</b> logged in.
-```
-
-### `Lists and Keys`
-
-- For transforming arrays into lists of elements we uses JS arrays map method in React
-
-- Keys should be given to the elements inside the array to give the elements a stable identity. Keys helps React, identify which items have changed, are added, or are removed
-
-- We generally use ID's inside keys because Keys must be **Unique**. As a last resort we can use indexes. If the order of items may change. This can negatively impact performance and may cause issues with component state (in case of indexes)
-
-- Keys serve as a hint to React but they don’t get passed to your components as a Prop.
-
-### `Forms`
-
-- React manages the user input (two way data binding) by 'value' prop and 'handleChange' event. 
-An input form element whose value is controlled by React in this way i.e. by accepts both a value and an onChange prop is called a **Controlled Component**. 
-The  ```<select>``` and ```<textarea>``` tag are very similar to ```<input>``` tag. 
-
-```
-<input type="text" value={this.state.value} onChange={this.handleChange} />
-```
-
-- Multiple inputs can be handled by using the name attribute and handling them in single handleChange function. Also making use of  ES6 computed property name syntax to update the state key based on the name. (state name and input name prop must be same)
-
-```
-    const name = target.name;
-
-    this.setState({
-      [name]: value
-    });
-```
-
 
 - Unlike the setState method found in class components, useState does not automatically merge update objects. 
 You can replicate this behavior by combining the function updater form with object spread syntax:
@@ -160,6 +83,199 @@ Simlarly when updating state twice won't work because state changing renders new
     setCount(count => count + 1);
   }
 ```
+
+
+### Adding Interactivity (new-docs)
+
+## 1. Responding To Events 
+
+By convention, it is common to name event handlers as handle followed by the event name. You’ll often see onClick={handleClick}, onMouseEnter={handleMouseEnter}, and so on.
+
+Functions passed to event handlers must be passed, not called. For example:
+
+```
+<button onClick={handleClick}>	//passing a function (correct)	
+<button onClick={handleClick()}> calling a function (incorrect)
+```
+The difference is subtle. In the first example, the handleClick function is passed as an onClick event handler. This tells React to remember it and only call your function when the user clicks the button.
+
+In the second example, the () at the end of handleClick() fires the function immediately during rendering, without any clicks. This is because JavaScript inside the JSX { and } executes right away. Same is true for inline function
+
+```
+<button onClick={() => alert('...')}> //passing a function (correct)
+<button onClick={alert('...')}> // calling a function (incorrect)
+```
+
+- Can also pass event handlers as props (for child to parent communication).By convention, event handler props should start with on, followed by a capital letter.
+
+- Event propagation: Event handlers will also catch events from any children your component might have. We say that an event “bubbles” or “propagates” up the tree: it starts with where the event happened, and then goes up the tree.
+
+- Events propagate upwards. Call e.stopPropagation() on the first argument to prevent that.
+
+- Explicitly calling an event handler prop from a child handler is a good alternative to propagation.
+```
+<button onClick={e => {
+      e.stopPropagation();
+      onClick();
+}}>
+```
+
+- Event handlers receive an event object as their only argument. By convention, it’s usually called e, which stands for “event”. You can use this object to read information about the event. for example ```e.target.value``` or can stop propgation to parent like 
+```e.stopPropagation();```
+
+Preventing default behavior: ```e.preventDefault()``` prevents the default browser behavior for the few events that have it.
+
+Event Handlers produce side effects because event handlers don’t need to be pure, so it’s a great place to change something —for example, change an input’s value, or change a list in response to a button press. So they are a place where we can setState.
+
+## 2. State: A Component's Memory 
+
+- Where there's a need for a component to remember something, (for ex: interaction) in between rerendering, we can make that part
+state. Components need to “remember” things (ex: the current input value, the current image, the shopping cart). In React, this kind of component-specific memory is called state.
+
+- **Question:** Why cant we use local variable instead of State ?
+
+1. Local variables don’t persist between renders. When React renders this component a second time, it renders it from scratch—it doesn’t consider any changes to the local variables.
+2. Changes to local variables won’t trigger renders. React doesn’t realize it needs to render the component again with the new data.
+
+- Two update state two need to happend **Retain** (state variable) **Trigger** (state setter func)
+
+- **Hooks** are special functions that are only available while React is rendering. They let you “hook into” different React features.
+
+-  **Rules of Hooks** 
+1. Don’t call Hooks inside loops, conditions, or nested functions
+2. Only Call Hooks from React Functions
+3. Call hook from top level of the component function.
+
+- Every time your component renders, useState gives you an array containing two values:
+1. The state variable (index) with the value you stored.
+2. The state setter function (setIndex) which can update the state variable and trigger React to render the component again.
+
+- **Behind the scene** when you set a state ```const [index, setIndex] = useState(0);```
+
+1. Your component renders the first time. Because you passed 0 to useState as the initial value for index, it will return [0, setIndex]. React remembers 0 is the latest state value.
+2. You update the state. When a user clicks the button, it calls setIndex(index + 1). index is 0, so it’s setIndex(1). This tells React to remember index is 1 now and triggers another render.
+3. Your component’s second render. React still sees useState(0), but because React remembers that you set index to 1, it returns [1, setIndex] instead.
+4. And so on!
+
+- If you find that you often change two state variables together, it might be better to combine them into a single one. For example, if you have a form with many fields, it’s more convenient to have a single state variable that holds an object than state variable per field.
+
+- You can have more than one state variable. Internally, React matches them up by their order.
+
+- State is private to the component. If you render it in two places, each copy gets its own state.
+
+- **Question:** How does React know which state to return? / There is no “identifier” that is passed to useState, so how does it know which of the state variables to return?
+
+- If hooks are declared in conditional statement/ not declared in top level of the component, then we might get this error : 'Rendered fewer hooks than expected.'
+
+- A state variable is only necessary to keep information between re-renders of a component. Within a single event handler, a regular variable will do fine. Don’t introduce state variables when a regular variable works well.
+
+## 3. Render and Commit 
+
+**Step 1:** 'Triggering' a Render
+
+**Step 2:** React 'Renders' your components
+“Rendering” is React calling your components.
+
+1. On initial render, React will call the root component. ```root.render(<Image />); //in index.js```
+2. For subsequent renders, React will call the function component whose **state update** triggered the render.
+
+- This process is recursive: if the updated component returns some other component, React will render that component next, and if that component also returns something, it will render that component next, and so on. The process will continue until there are no more nested components and React knows exactly what should be displayed on screen.
+
+- During the initial render: React will create the DOM nodes for <section>, <h1>, and three <img> tags.
+- During a re-render: React will calculate which of their properties, if any, have changed since the previous render. It won’t do anything with that information until the next step, the commit phase.
+
+- Rendering must always be a pure calculation. (react is doing rendering btw)
+
+- **Optimizing performance :** The default behavior of rendering all components nested within the updated component is not optimal for performance if the updated component is very high in the tree. If you run into a performance issue, there are several opt-in ways to solve it described in the Performance section. Don’t optimize prematurely!
+
+**Step 3:** React 'Commits' changes to the DOM: 
+
+After rendering (calling) your components, React will modify the DOM.
+
+- For the initial render, React will use the appendChild() DOM API to put all the DOM nodes it has created on screen.
+- For re-renders, React will apply the minimal necessary operations (calculated while rendering, changes etc) to make the DOM match the latest rendering output.
+
+- React does not touch the DOM if the rendering result is the same as last time
+
+- After rendering is done and React updated the DOM, the browser will repaint the screen. Although this process is known as “browser rendering”, we’ll refer to it as “painting” 
+
+## 4. State: As a Snapshot
+
+
+
+### Handling Evenets
+
+- Need to call ``` e.preventDefault(); ``` to prevent default behaviour of the dom elements (like onSubmit method of <form>). Here e is synthetic event
+
+- In JavaScript, class methods are not bound by default. So need to bind class methods in constructor or can use class feilds 
+See below example respectively.
+
+```
+this.toggleSwitch = this.toggleSwitch.bind(this) (bind method)
+```
+
+```
+incrementCounter = ()=>{} (class field method)
+```
+
+- Passing arguments to the event handlers can be done in two ways. See below example respectively.
+
+*Note : Both these appraoches create different (new) function each time it's render. But there's no way around this when passing argument.*
+
+```
+onClick={(e) => this.deleteRow(id, e)} (Problem with this syntax: A different callback is created each time the Button renders )
+```
+
+```
+onClick={this.deleteRow.bind(this, id)} (Problem with this syntax: The bind also creates new function )
+```
+
+### Conditional Rendering
+
+- We can shorter the conditional rendering syntax by replacing 'if' with JS Logical && Operator or using Inline If-Else with Conditional Operator. See below example respectively.
+
+```
+{ unreadMessages.length > 0 && 
+  <div> You Have {unreadMessages.length} Messages </div> 
+} 
+(If the expression does not return true/false, the above approach will return the false expression example:
+ {count && <h1>Messages: {count}</h1>} in case of false will return <div> 0 </div>
+```
+
+``` 
+The user is <b>{isLoggedIn ? 'currently' : 'not'}</b> logged in.
+```
+
+### Lists and Keys
+
+- For transforming arrays into lists of elements we uses JS arrays map method in React
+
+- Keys should be given to the elements inside the array to give the elements a stable identity. Keys helps React, identify which items have changed, are added, or are removed
+
+- We generally use ID's inside keys because Keys must be **Unique**. As a last resort we can use indexes. If the order of items may change. This can negatively impact performance and may cause issues with component state (in case of indexes)
+
+- Keys serve as a hint to React but they don’t get passed to your components as a Prop.
+
+### Forms
+
+- React manages the user input (two way data binding) by 'value' prop and 'handleChange' event. 
+An input form element whose value is controlled by React in this way i.e. by accepts both a value and an onChange prop is called a **Controlled Component**. 
+The  ```<select>``` and ```<textarea>``` tag are very similar to ```<input>``` tag. 
+
+```
+<input type="text" value={this.state.value} onChange={this.handleChange} />
+```
+
+- Multiple inputs can be handled by using the name attribute and handling them in single handleChange function. Also making use of  ES6 computed property name syntax to update the state key based on the name. (state name and input name prop must be same)
+
+```
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+```
+
 
 ### Lifting States Up
 
