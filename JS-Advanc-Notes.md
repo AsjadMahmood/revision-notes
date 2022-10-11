@@ -1,35 +1,24 @@
-### Destructuring 
 
-- Destructuring assignment is a special syntax that allows us to “unpack” arrays or objects into a bunch of variables, as sometimes that’s more convenient.
+React project was generated with [Vite](https://vitejs.dev/guide/)
 
-- Destructuring also works great with complex functions that have a lot of parameters, default values
+## Install dependencies
 
-- Array “destructurizes” by copying items into variables. But the array itself is not modified.
+Run `npm install` to download all the required dependencies
 
-- Unwanted elements of the array can also be thrown away via an extra comma:
+## Running the application
 
-```
-// second element is not needed
-let [firstName, , title] = ["Julius", "Caesar", "Consul", "of the Roman Republic"];
-```
+Run `npm run dev` for a dev server to start and navigate to `http://127.0.0.1:5173`. 
+The app will automatically reload if you change any of the source files.
 
-- **Important** Internally a destructuring assignment works by iterating over the right value. It’s a kind of syntax sugar for calling for..of over the value to the right of = and assigning the values.
+## Running the tests
 
-- If we’d like also to gather all that follows – we can add one more parameter that gets “the rest” using three dots "...":
+Run `npm test` to start the tests
 
-```
-let [name1, name2, ...titles] = ["Julius", "Caesar", "Consul", "of the Roman Republic"];
-// now titles = ["Consul", "of the Roman Republic"]
-```
+## Environment Version
 
-- 
+Node version : 16.10.0
 
-*for detail visit: https://javascript.info/destructuring-assignment*
 
-### Currying
+## ---------------------------------------
 
-### Spread Operator
-
-### Closures
-
-### Binding (this)
+Enjoy exploring the project. Thanks :)
