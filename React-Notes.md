@@ -240,6 +240,69 @@ The state stored in React may have changed by the time the alert runs, but it wa
 
 https://beta.reactjs.org/learn/state-as-a-snapshot (quickly do the challenge at the last)
 
+## 5.Queueing a Series of State Updates
+
+- Setting a state variable will queue another render. But sometimes you might want to perform multiple operations on the value before queueing the next render. To do this, it helps to understand how React **batches** (group of things produced at once) state updates.
+
+-  Each render’s state values are fixed (a state cannot have multiple values in one render (function call that return JSX))
+-  React waits until all code in the event handlers has run before processing your state updates (before re rendering). This lets you update multiple state variables—even from multiple components—without triggering too many re-renders.(because react wait for the code to run in the event handler and in that handler we can set multiple states). But this also means that the UI won’t be updated until after your event handler, and any code in it, completes. This behavior, also known as **batching**, makes your React app run much faster. 
+- React does not batch across multiple intentional events like clicks—each click is handled separately. Rest assured that React only does batching when it’s generally safe to do. (react does it on it's end)
+- For updating the same state variable multiple times before the next render (uncommon use case) we use **updator function** in setState which is a way to tell react “do something with the state value” instead of just replacing it
+- Behind the scene what updator function does is:
+1. React queues this function to be processed after all the other code in the event handler has run.
+2. During the next render, React goes through the queue and gives you the final updated state.
+```
+setNumber(n => n + 1): n => n + 1 // is a function. React adds it to a queue.
+setNumber(n => n + 1): n => n + 1 // is a function. React adds it to a queue.
+setNumber(n => n + 1): n => n + 1 // is a function. React adds it to a queue.
+
+```
+- When you call useState during the next render, React goes through the queue (so, the 2nd step). The previous number state was 0, so that’s what React passes to the first updater function as the n argument. Then React takes the return value of your previous updater function and passes it to the next updater as n, and so on:
+
+- What happens if you update state after replacing it ?
+```
+<button onClick={() => {
+  setNumber(number + 5); //replacing
+  setNumber(n => n + 1); //updating
+}}>
+```
+Here’s what this event handler tells React to do:
+1. setNumber(number + 5): number is 0, so setNumber(0 + 5). React adds “replace with 5” to its queue.
+2. setNumber(n => n + 1): n => n + 1 is an updater function. React adds that function to its queue.
+
+**Deep** You may have noticed that setState(x) actually works like setState(n => x), but n is unused! (in case of replacing)
+
+```     
+setNumber(n => n + 1);
+setNumber(number + 5);
+```
+Output = ?
+```
+setNumber(number + 5);
+setNumber(n => n + 1);
+setNumber(42);
+```
+Output = ?
+
+| queued update	| n             | Return|
+| ------------- |:-------------:| -----:|
+|“replace with 5| (0) unused    | 5     |
+| n => n + 1    | 5             | 5 + 1 = 6|
+|“replace with 42”| 6 (unused)  |    42 |
+
+To summarize, here’s how you can think of what you’re passing to the setNumber state setter:
+
+1. **An updater function** (e.g. n => n + 1) gets added to the queue.
+2. **Any other value** (e.g. number 5) adds “replace with 5” to the queue, ignoring what’s already queued.
+
+- Updater functions must be pure and only return the result. Don’t try to set state from inside of them or run other side effects
+- It’s common to name the updater function argument by the first letters of the corresponding state variable. (naming convention) ```setEnabled(e => !e); //state name = enable```
+
+- React processes state updates after event handlers have finished running. This is called batching.
+
+- **Do Challenge Must** 
+
+
 ### Handling Evenets
 
 - Need to call ``` e.preventDefault(); ``` to prevent default behaviour of the dom elements (like onSubmit method of <form>). Here e is synthetic event
