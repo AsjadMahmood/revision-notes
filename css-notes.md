@@ -42,7 +42,14 @@ em is very similar to % unit. It's relative to it's parent container.Only in cas
 
 6. **fr**
 
-fr unit is used only in flex and grid layouts.
+fr unit is used only in flex and grid layouts. It donates the fraction part of the page.
+
+```    
+.any-class{
+    display: grid;
+    grid-template-columns: 1fr 3fr; //2nd col would have 3 times width as compared to 1st col
+}
+```
 
 
 ### CSS Layouts
@@ -52,3 +59,14 @@ fr unit is used only in flex and grid layouts.
 
 
 ### Typography
+
+### CSS box-sizing property
+
+- settig ```box-sizing``` property to ```border-box``` makes sure that the padding and border are included in the total width and height of the elements. So we usually write this to apply on every element.
+
+```
+* {
+  box-sizing: border-box;
+}
+```
+

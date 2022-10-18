@@ -554,6 +554,17 @@ useEffect( () => () => console.log("unmount"), [] ); componentWillUnmount
 6. [Material-UI](https://mui.com/)=> The world's most popular React UI framework. Used for consuming pre-built components like overlay, popups, aside-bars etc.
 
 
+## React Router DOM
+- Navigating to the Url
+```
+const navigate = useNavigate();
+ navigate(`company/${symbol}`)
+```
+- Accessing param from the url 
+```
+let { id } = useParams();
+```
+
 ### Questions Regarding React
 
 - What is Virtual Dom / Why do we need it / Why direct DOM manupulation is discouraged ? 
@@ -561,6 +572,8 @@ useEffect( () => () => console.log("unmount"), [] ); componentWillUnmount
 - Does react FC use closures?
 
 - How do we default export components. Whats the difference ? 
+
+
 
 
 ### Imp points discovered during development

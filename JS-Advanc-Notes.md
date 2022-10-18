@@ -31,3 +31,16 @@ let [name1, name2, ...titles] = ["Julius", "Caesar", "Consul", "of the Roman Rep
 ### Closures
 
 ### Binding (this)
+
+### Decorators
+
+- Decorators are helpful for anything you want to transparently wrap with extra functionality. These include memoization, enforcing access control and authentication, instrumentation and timing functions, logging, rate-limiting, and the list goes on.
+
+```
+@Component()
+class AppComponent{}
+```
+
+- `@` indicates to the parser that we’re using a decorator while component references a function by that name. Our decorator takes an argument (the function/class being decorated) and returns the same function/class with added functionality.
+
+- decorators proposal seeks to enable annotating and modifying JavaScript classes, properties and object literals at design time while keeping a syntax that’s declarative. ( while classes support extension, we need something better when we have multiple classes that need to share a single piece of functionality)
