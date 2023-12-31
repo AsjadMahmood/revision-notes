@@ -50,3 +50,53 @@ https://angular.io/generated/images/guide/architecture/overview2.png
 **Advanced Angular Concept Links** https://angular.io/guide/architecture-next-steps
 
 ### Using observables to pass values
+
+- Observables provide support for passing messages between parts of your application. They are used frequently in Angular and are a technique for event handling, asynchronous programming, and handling multiple values.
+
+- In the observer design pattern there's an object called  ```subject``` which maintains the list of dependents called ```observers```. It notifies these observers of the state changes. Kind of similar to publish/subscribe pattern. 
+
+- Observables are declarative i.e. You define a function for publishing values, but it is not executed until a consumer subscribes to it. The subscribed consumer then receives notifications until the function completes, or until they unsubscribe.
+for example in order to receive notifications from a certain chanel in youtube you have to first subscribe to it.
+
+- An observable can deliver multiple values of any type
+- The API for receiving values is the same whether the values are delivered synchronously or asynchronously.
+- Whether the stream was keystrokes, an HTTP response, or an interval timer, the interface for listening to values and stopping listening is the same.
+
+
+
+https://angular.io/guide/observables
+
+
+### Basic Angular related Question 
+
+1. How TS compiles down to JS ? / Browsers understand JS then how our TS code get’s converted into JS
+
+Angular uses AOT compilation to compile HTML template and ts code into efficient js code. So when we run the 
+ng build --prod our code is compiled to /dist directory. Which then browser downloads and runs that code. 
+The benfit of AOT vs JIT (just in time) is that AOT (Compiling your application during the build process ) provides faster rendering in the browser.
+
+2. What is IVY and AOT in angular.
+
+- **IVY**:  Ivy is the code name for Angular's next-generation compilation and rendering pipeline
+Benefits
+Generated code that is easier to read and debug at runtime
+Faster re-build time
+Improved payload size (Real world applications should see some size improvements, but many more improvements are planned)
+Improved template type checking
+- **AOT** : Ahead of time compilation that is compiling your application during the build process which results in better rendering of the app in the browser.
+
+3. Latest angular and its new features. ?
+
+**Standalone Components:**
+- Now you can use Angular modules as an option. Moreover, you can also use standalone components for the first time.
+In older versions of Angular, every component had to be integrated with a module. As a result, each component must be included in a parent module's. But now ng module is made optional
+
+- Only IVY is available. So View Engine is gone
+- CLI improved
+- Comes New TS version
+- Comes with New RXJS version
+
+## Angular Questions
+
+1. Can we have a click listner on ```<ng-container>``` tag
+- You can't because ng-container doesn't get rendered in the html template (this is angular specific). So it wont be transpiled in the actual DOM, that element will not exists at runtime.

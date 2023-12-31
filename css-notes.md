@@ -62,7 +62,7 @@ fr unit is used only in flex and grid layouts. It donates the fraction part of t
 
 ### CSS box-sizing property
 
-- settig ```box-sizing``` property to ```border-box``` makes sure that the padding and border are included in the total width and height of the elements. So we usually write this to apply on every element.
+- settig ```box-sizing``` property to ```border-box``` makes sure that the padding and border are included in the total width and height of the elements. So we usually write below to apply on every element accross application.
 
 ```
 * {
@@ -70,3 +70,7 @@ fr unit is used only in flex and grid layouts. It donates the fraction part of t
 }
 ```
 
+
+### Things Encounter Daily
+- use ```flex-grow : 1;``` on flex-item, which you want to **occupy(take) available width or height** (when ```flex-direction: coloumn;```);
+- 
