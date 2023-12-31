@@ -97,4 +97,3 @@ LEFT  JOIN Orders o ON  o.customerId = c.customerId
 It is not possible to test for NULL values with comparison operators, such as =, <, or <>.
 
 We will have to use the IS NULL and IS NOT NULL operators instead.
-
