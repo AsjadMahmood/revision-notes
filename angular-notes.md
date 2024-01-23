@@ -43,7 +43,7 @@ https://angular.io/guide/architecture-services
 
 ### Angular Basic Architecture
 
-- Below diagram very well explains the architecture of angular.
+- Below diagram very well explains the basic architecture of angular.
 
 https://angular.io/generated/images/guide/architecture/overview2.png
 
@@ -62,6 +62,9 @@ for example in order to receive notifications from a certain chanel in youtube y
 - The API for receiving values is the same whether the values are delivered synchronously or asynchronously.
 - Whether the stream was keystrokes, an HTTP response, or an interval timer, the interface for listening to values and stopping listening is the same.
 
+### D/F B/W Subject And Behavioural Subject
+
+- 
 
 
 https://angular.io/guide/observables
@@ -100,3 +103,17 @@ In older versions of Angular, every component had to be integrated with a module
 
 1. Can we have a click listner on ```<ng-container>``` tag
 - You can't because ng-container doesn't get rendered in the html template (this is angular specific). So it wont be transpiled in the actual DOM, that element will not exists at runtime.
+
+2. What is Angular Universal
+- Angular Universal is a technology stack within the Angular framework that enables server-side rendering (SSR) for Angular applications. Traditionally, Angular applications run entirely on the client side (in the browser), but with Angular Universal, you can also render Angular applications on the server side before sending them to the client. This can provide several benefits, including improved performance, better search engine optimization (SEO), and enhanced user experience.
+
+3. What is Build Time and Run Time in context of web applications. (not specific Angular question)
+- Build Time:
+
+Definition: Build time refers to the phase during which the source code of an application is transformed into an executable or deployable form.
+Activities: During build time, tasks such as compiling source code, bundling assets, optimizing resources, and preparing the application for deployment are performed.
+Output: The result of the build process is often a set of static files, scripts, stylesheets, and other artifacts that are ready to be served to clients.
+Run Time:
+
+Definition: Run time is the phase when the application is actively running and executing on a user's device or server.
+Activities: During run time, the application processes user input, interacts with databases or external services, and dynamically generates content or responds to user actions.
