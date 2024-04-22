@@ -24,13 +24,63 @@ let [name1, name2, ...titles] = ["Julius", "Caesar", "Consul", "of the Roman Rep
 
 *for detail visit: https://javascript.info/destructuring-assignment*
 
-### Currying
+### Implementation of JS forEach, filter, map, methods
 
-### Spread Operator
+```
+let arr = [1,2,3];
 
-### Closures
+let fArr = arr.forEach(item => item < 3); // What is fArr
 
-### Binding (this)
+fArr = arr.filter(item => item < 3); // What is fArr
+
+fArr = arr.map(item => item < 3); // What is fArr
+
+```
+
+Explanation: 
+
+- The filter() method of Array instances creates a shallow copy of a portion of a given array, filtered down to just the elements from the given array that pass the test implemented by the provided function. A shallow copy of the given array containing just the elements that pass the test. If no elements pass the test, an empty array is returned.
+
+- The The map() method of Array instances creates a new array populated with the results of calling a provided function on every element in the calling array. Return value is a new array with each element being the result of the callback function.
+
+- The forEach() method of Array instances executes a provided function once for each array element. No return value.
+
+```
+Array.prototype.myEach = function (callback) {
+  for (let i = 0; i < this.length; i++) {
+    callback(this[i], i, this);
+  }
+};
+
+Array.prototype.myFilter = function (callback) {
+  let newArr = [];
+  for (let i = 0; i < this.length; i++) 
+  {
+    if(callback(this[i], i, this))
+      newArr.push(this[i])
+  }
+  return newArr;
+}
+
+Array.prototype.myMap = function (callback) {
+  let newArr = [];
+  for (let i = 0; i < this.length; i++) 
+  {
+      newArr.push(callback(this[i], i, this))
+  }
+  return newArr;
+}
+
+let arr = [1, 2, 3];
+
+arr.myEach((item => { console.log(item) }));
+console.log(arr.myFilter((item => item < 3)));
+console.log(arr.myMap((item => item * 2)));
+
+```
+
+https://github.com/knaxus/native-javascript/blob/master/implementations/filter.js (for other implementations see this link)
+
 
 ### Decorators
 
@@ -121,7 +171,7 @@ _.isEqual(a,b) // true
 
 ```
   async editCheck(data){
-    someAsyncFunc();
+    await someAsyncFunc();
     console.log('This will log at the end');
   }
 
@@ -138,8 +188,16 @@ _.isEqual(a,b) // true
 
 - Use ```Set``` for array where possible because ```array.includes(item)``` method has linear complexity where as ```Set.has(item)``` is fast.
 
-### Basic JS related Question 
 
+### Currying
+
+### Spread Operator
+
+### Closures
+
+### Binding (this)
+
+### Basic JS related Question 
 
 1. What is Webpack ? It’s use cases.
 
